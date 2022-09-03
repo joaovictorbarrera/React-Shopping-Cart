@@ -23,6 +23,7 @@ body {
 .item {
   display: flex;
   flex-direction: column;
+  align-items: center;
   border: 2px solid lightgray;
   padding: 0.5em;
 }
@@ -39,25 +40,34 @@ body {
   gap: 5vh 5vw;
 }
 
-.add-to-cart-button {
-  background-color: rgb(0, 235, 235);
+.item-details p {
+  font-size: 20px;
+}
+
+button {
   color: black;
   font-size: 0.6em;
   font-weight: bold;
   border: none;
   padding: 10px;
+
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+.add-to-cart-button {
+  background-color: rgb(0, 235, 235);
 }
 
 .add-to-cart-button:hover {
   background-color: rgb(80, 235, 235);
-  cursor: pointer;
 }
 
 .add-to-cart-button:active {
   background-color: rgb(100, 235, 235);
 }
-
-
 
 @media only screen and (max-width: 1450px){
   body {
@@ -90,5 +100,110 @@ body {
   .item-picture {
     height: 100%;
     width: 100%;
+  }
+}
+
+.shopping-cart {
+  border: 2px solid lightgray;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1em;
+  width: 75%;
+  padding: 0.5em 0.8em;
+  list-style: none;
+}
+
+.cart-details {
+  width: 100%;
+  display: flex;
+}
+
+.subtotal {
+  margin-right: auto;
+}
+
+.pay-button {
+  background-color: rgb(124, 252, 0);
+}
+
+.pay-button:hover {
+  background-color: rgb(104, 232, 0);
+}
+
+.pay-button:active {
+  background-color: rgb(84, 212, 0);
+}
+
+.cart-item-picture {
+  height: 150px;
+  width: 150px;
+  object-fit: contain;
+}
+
+.cart-item-details {
+  display: flex;
+  width: 100%;
+}
+
+.cart-item {
+  list-style: none;
+  padding: 1em;
+  width: 100%;
+  border: 1px solid lightgray;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.cart-item-price {
+}
+
+.cart-item-name {
+  margin-left: 1em;
+  margin-right: auto;
+}
+
+.remove-from-cart-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: black;
+  background-color: white;
+}
+
+.remove-from-cart-button:hover {
+  color: rgb(40, 40, 40)
+}
+
+.remove-from-cart-button:active {
+  color: rgb(60, 60, 60)
+}
+
+.fade-out {
+  opacity: 1;
+  animation: fadeOut 0.25s;
+}
+
+@keyframes fadeOut {
+  from {
+  	opacity: 1;
+  }
+  to {
+ 	opacity: 0;
+  }
+}
+
+.fade-in {
+  opacity: 0;
+	animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+  from {
+  	opacity: 0;
+  }
+  to {
+ 	opacity: 1;
   }
 }

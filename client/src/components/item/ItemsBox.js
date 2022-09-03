@@ -1,9 +1,9 @@
 import React from 'react'
-import '../App.css'
+import '../../App.css'
 
 function ItemsBox({children}) {
   return (
-    <div className='items-box'>{children}</div>
+    <ul className='items-box'>{children}</ul>
   )
 }
 
