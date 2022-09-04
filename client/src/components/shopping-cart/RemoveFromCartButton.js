@@ -8,14 +8,11 @@ function RemoveFromCartButton({item, itemRef}) {
     const setCartItems = useSetShoppingCartItems()
 
     const removeItemFromCart = useCallback(() => {
-        console.log("removing from cart")
         itemRef.current.onanimationend = () => {
-            console.log("filtering cart")
+            itemRef.current.style.display = "none"
             setCartItems(
-                JSON.stringify(
-                    cartItems.filter(
-                        cartItem => cartItem.name !== item.name
-                    )
+                cartItems.filter(
+                    cartItem => cartItem.name !== item.name
                 )
             )
         }
@@ -28,7 +25,8 @@ function RemoveFromCartButton({item, itemRef}) {
     }
 
     return (
-        <button onClick={confirmRemoval} className='remove-from-cart-button'>X</button>
+        <button onClick={confirmRemoval} 
+        className='closing-button'>✕</button>
     )
 }
 

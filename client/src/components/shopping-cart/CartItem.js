@@ -3,20 +3,16 @@ import '../../App.css'
 import CartItemBody from './CartItemBody'
 import RemoveFromCartButton from './RemoveFromCartButton'
 
-function CartItem({item}) {
-    
+function CartItem({item}) { 
     const itemRef = useRef()
-
+    
     useEffect(() => {
-        if (item.count < 2) {
-            itemRef.current.onanimationend = () => {
-                itemRef.current.classList.remove('fade-in')
-                itemRef.current.onanimationend = undefined
-            }
-
-            itemRef.current.classList.add('fade-in')
+        itemRef.current.onanimationend = () => {
+            itemRef.current.classList.remove('fade-in')
+            itemRef.current.onanimationend = undefined
         }
-    }, [itemRef, item.count])
+        itemRef.current.classList.add('fade-in')
+    }, [])
 
     return (
         <li ref={itemRef} className='cart-item'>

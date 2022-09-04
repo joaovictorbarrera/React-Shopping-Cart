@@ -5,7 +5,9 @@ import ItemDetails from './ItemDetails'
 function Item({item}) {
   return (
     <li className='item'>
-        <img alt={item.name} className="item-picture" src={item.picture}/>
+        <div className="item-picture">
+          <img alt={item.name} src={item.picture}/>
+        </div>
         <ItemDetails item={item} />
     </li>
   )

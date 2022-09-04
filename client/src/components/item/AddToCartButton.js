@@ -12,10 +12,10 @@ function AddToCartButton({item}) {
     const similarItem = cartItems.find(cartItem => cartItem.name === item.name)
     if (similarItem) {
         similarItem.count += 1
-        setCartItems(JSON.stringify([...cartItems]))
+        setCartItems([...cartItems])
     } else {
         item.count = 1
-        setCartItems(JSON.stringify([item, ...cartItems]))
+        setCartItems([item, ...cartItems])
     }
     }, [cartItems, setCartItems, item]
   )

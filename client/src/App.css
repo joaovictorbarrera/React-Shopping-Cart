@@ -6,13 +6,13 @@
 
 body {
   font-size: 30px;
-  font-family: monospace;
+  font-family:sans-serif;
   padding: 10px;
 }
 
 .page {
   background-color: white;
-  height: 100vh;
+  /* height: 100vh; */
   display:flex;
   align-items: center;
   flex-direction: column;
@@ -20,28 +20,68 @@ body {
   gap: 2% 2%;
 }
 
+.title {
+  font-size: 1.5em;
+}
+
+.page-description {
+  margin-top: 1em;
+  font-size: 0.8em;
+}
+
+.items-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 1em 9em;
+  padding: 1em;
+  border: 1px solid lightgray;
+  border-radius: 0.25em;
+}
+
+.items-box ul {
+  display:grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 2vh 2vw;
+  list-style: none;
+}
+
+.items-box h1 {
+  font-size: 0.8em;
+  margin-bottom: 1em;
+}
+
 .item {
   display: flex;
   flex-direction: column;
   align-items: center;
   border: 2px solid lightgray;
+  border-radius: 0.1em;
   padding: 0.5em;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif ;
 }
 
-.item-picture {
-  height: 250px;
-  width: 250px;
+.item:hover {
+  cursor: pointer;
+  border: 2px solid green;
+}
+
+.item-picture img {
+  height: 200px;
+  width: 200px;
   object-fit: contain;
 }
 
-.items-box {
-  display:grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  gap: 5vh 5vw;
+.item-details {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25em;
 }
 
 .item-details p {
-  font-size: 20px;
+  font-size: 0.6em;
 }
 
 button {
@@ -58,6 +98,7 @@ button:hover {
 }
 
 .add-to-cart-button {
+  margin-top: auto;
   background-color: rgb(0, 235, 235);
 }
 
@@ -105,22 +146,25 @@ button:hover {
 
 .shopping-cart {
   border: 2px solid lightgray;
+  border-radius: 0.25em;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 1em;
   width: 75%;
-  padding: 0.5em 0.8em;
+  padding: 0.85em 1em;
   list-style: none;
 }
 
 .cart-details {
   width: 100%;
   display: flex;
+  align-items: center;
 }
 
 .subtotal {
-  margin-right: auto;
+  margin-left: auto;
+  margin-right: 1em;
 }
 
 .pay-button {
@@ -143,6 +187,8 @@ button:hover {
 
 .cart-item-details {
   display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
 }
 
@@ -156,15 +202,22 @@ button:hover {
   position: relative;
 }
 
-.cart-item-price {
-}
-
 .cart-item-name {
   margin-left: 1em;
   margin-right: auto;
 }
 
-.remove-from-cart-button {
+.cart-item-count {
+  margin-right: 1em;
+  padding: 0.5em;
+  width: 50px;
+}
+
+.cart-item-price {
+  white-space: nowrap;
+}
+
+.closing-button {
   position: absolute;
   top: 0;
   right: 0;
@@ -172,11 +225,11 @@ button:hover {
   background-color: white;
 }
 
-.remove-from-cart-button:hover {
+.closing-button:hover {
   color: rgb(40, 40, 40)
 }
 
-.remove-from-cart-button:active {
+.closing-button:active {
   color: rgb(60, 60, 60)
 }
 
@@ -206,4 +259,28 @@ button:hover {
   to {
  	opacity: 1;
   }
+}
+
+footer {
+  text-align: center;
+  font-size: 0.7em;
+}
+
+footer hr {
+  margin-top: 3em;
+  margin-bottom: 0.3em;
+}
+
+.notifications-wrapper {
+  position: fixed;
+  top: 0.4em;
+  right: 0.4em;
+}
+
+.notification-item {
+  position: relative;
+  border: 1px solid lightgray;
+  border-radius: 0.25em;
+  background-color: white;
+  padding: 1em;
 }

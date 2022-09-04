@@ -17,7 +17,7 @@ export default function ShoppingCartItemsProvider({children}) {
 
     return (
         <ShoppingCartItemsContext.Provider value={cartItems}>
-            <SetShoppingCartItemsContext.Provider value={setCartItems}>
+            <SetShoppingCartItemsContext.Provider value={(value) => setCartItems(JSON.stringify(value))}>
                 {children}
             </SetShoppingCartItemsContext.Provider>
         </ShoppingCartItemsContext.Provider>

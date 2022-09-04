@@ -1,26 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import CartItem from './CartItem';
 import '../../App.css'
 import { useShoppingCartItems } from '../../contexts/ShoppingCartProvider';
 import CartDetails from './CartDetails';
 
-function ShoppingCart() {
+function ShoppingCart({isLoading}) {
     const cartItems = useShoppingCartItems()
-    const [totalPrice, setTotalPrice] = useState(0)
 
-    useEffect(() => {
-        setTotalPrice(
-            cartItems.reduce(
-                (total, item) => total + item.price * item.count, 0
-            )
-        )
-    }, [cartItems])
+    if (isLoading || !cartItems || cartItems.length < 1) {
+        return <></>
+    }
 
     return (
         <ul className='shopping-cart'>
-            <li><h3>MY CART</h3></li>
-            {cartItems.map((item, index) => <CartItem key={index} className="cart-item" item={item}/>)}
-            <CartDetails totalPrice={totalPrice} />
+            <CartDetails />
+            {cartItems.map(item => <CartItem key={item.id} className="cart-item" item={item}/>)}
         </ul>
     )
 }
