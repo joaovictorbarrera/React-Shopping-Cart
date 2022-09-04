@@ -63,7 +63,7 @@ body {
 
 .item:hover {
   cursor: pointer;
-  border: 2px solid green;
+  border: 2px solid rgb(0, 235, 235);
 }
 
 .item-picture img {
@@ -112,7 +112,7 @@ button:hover {
 
 @media only screen and (max-width: 1450px){
   body {
-    font-size: 27px;
+    font-size: 0.95em;
   }
   .items-box {
     grid-template-columns: 1fr 1fr 1fr;
@@ -124,7 +124,7 @@ button:hover {
 }
 @media only screen and (max-width: 800px){
   body {
-    font-size: 25px;
+    font-size: 0.90em;
   }
   .items-box {
     grid-template-columns: 1fr 1fr;
@@ -132,12 +132,6 @@ button:hover {
 }
 
 @media only screen and (max-width: 520px){
-  /* body {
-    font-size: 25px;
-  } */
-  /* .items-box {
-    grid-template-columns: 1fr;
-  } */
   .item-picture {
     height: 100%;
     width: 100%;
