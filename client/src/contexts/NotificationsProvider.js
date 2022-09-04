@@ -26,7 +26,7 @@ export default function NotificationsProvider({children}) {
             <SetNotificationsContext.Provider value={setNotifications}>
                 <div className="notifications-wrapper">
                     {notifications.map(note => {
-                        return <Notification note={note}/>
+                        return <Notification key={note.id} note={note}/>
                     })}
                 </div>
                 {children}
