@@ -13,13 +13,7 @@ export function useSetNotifications() {
 }
 
 export default function NotificationsProvider({children}) {
-    const [notifications, setNotifications] = useState([
-        // {
-        //     "id": JSON.stringify(Date.now()),
-        //     "text":"<item> added to cart successfully.",
-        //     "type":"SUCCESS"
-        // },
-    ])
+    const [notifications, setNotifications] = useState([])
 
     return (
         <NotificationsContext.Provider value={notifications}>

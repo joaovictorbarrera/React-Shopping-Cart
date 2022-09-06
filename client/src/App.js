@@ -1,27 +1,30 @@
 import './App.css';
-import React, { useState } from "react"
-import Header from './components/Header';
+import React from "react"
 import ItemsBox from './components/item/ItemsBox';
 import ShoppingCart from './components/shopping-cart/ShoppingCart';
 import ShoppingCartItemsProvider from './contexts/ShoppingCartProvider';
 import Footer from './components/Footer';
-import PageDescription from './components/PageDescription';
 import NotificationsProvider from './contexts/NotificationsProvider';
+import Top from './components/Top';
+import { useAppStatus } from './contexts/AppStatusProvider';
 
 function App() {
-  const [isLoading, setLoading] = useState(true);
+  const appStatus = useAppStatus()
 
   return (
     <NotificationsProvider>
       <div className='page'>
-        <Header text='React Shopping Cart'/>
-        <PageDescription />
         <ShoppingCartItemsProvider>
-          <ItemsBox isLoading={isLoading} setLoading={setLoading}/>
-          <ShoppingCart isLoading={isLoading} />
+          <Top />
+          <ItemsBox/>
+          {appStatus !== "done" ? 
+          <></> :
+          <>
+            <ShoppingCart />
+          </>}
         </ShoppingCartItemsProvider>
       </div>
-      <Footer isLoading={isLoading} />
+      {appStatus === "loading" ? <></> : <Footer/>} 
     </NotificationsProvider>
   )
 }

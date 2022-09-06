@@ -4,35 +4,81 @@
   padding: 0;
 }
 
-body {
+:root {
   font-size: 30px;
+}
+
+body {
   font-family:sans-serif;
-  padding: 10px;
+  padding-bottom: 10px;
+  height: 1px;
+  min-height: 100vh;
+}
+
+#root {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .page {
   background-color: white;
-  /* height: 100vh; */
   display:flex;
   align-items: center;
   flex-direction: column;
-  text-align: center;
   gap: 2% 2%;
+}
+
+.top-wrapper {
+  background-color: rgb(0, 235, 235);
+  width: 100%;  
+}
+
+.top-items {
+  display: flex;
+  align-items: center;
+  color: white;
+  padding: 0.5em;
+  margin: 0 calc(9rem - 0.5em);
+}
+
+.top-cart-icon-wrapper {
+  margin-left: auto;
+  position: relative;
+}
+
+.top-cart-icon-wrapper.active {
+  cursor: pointer;
+}
+
+.top-shopping-cart-icon {
+  height: 40px;
+  width: 40px;
+}
+
+.floating-cart-count {
+  position: absolute;
+  bottom: 2px;
+  right: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: blue;
+  font-size: 0.5em;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px
 }
 
 .title {
   font-size: 1.5em;
 }
 
-.page-description {
-  margin-top: 1em;
-  font-size: 0.8em;
-}
-
 .items-box {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  text-align: center;
   margin: 1em 9em;
   padding: 1em;
   border: 1px solid lightgray;
@@ -46,9 +92,21 @@ body {
   list-style: none;
 }
 
-.items-box h1 {
-  font-size: 0.8em;
+.items-box-top {
+  width: 100%;
+  display:flex;
+  gap: 0.5em;
+  align-items: center;
   margin-bottom: 1em;
+}
+
+.items-box-top * {
+  font-size: 0.8em;
+}
+
+.items-box-top span {
+  font-size: 0.8em;
+  margin-left: auto;
 }
 
 .item {
@@ -58,7 +116,6 @@ body {
   border: 2px solid lightgray;
   border-radius: 0.1em;
   padding: 0.5em;
-  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif ;
 }
 
 .item:hover {
@@ -110,11 +167,45 @@ button:hover {
   background-color: rgb(100, 235, 235);
 }
 
+
+.notification-item.success {
+  box-shadow: green 0px 0px 15px 0px;
+  background-color: #28a745;
+  color: white;
+}
+
+.notification-item.error {
+  box-shadow: red 0px 0px 15px 0px;
+  background-color: #dc3545;
+  color: white;
+}
+
+.notification-item .closing-button {
+  color: white
+}
+
+.notification-timer {
+  position: absolute;
+  border-radius: 5%;
+  bottom: 0;
+  left: 0;
+  height: 8px;
+  width: 0;
+}
+
+.success .notification-timer {
+  background-color: #176329;
+}
+
+.error .notification-timer {
+  background-color: #811e28;
+}
+
 @media only screen and (max-width: 1450px){
-  body {
+  :root {
     font-size: 0.95em;
   }
-  .items-box {
+  .items-box ul {
     grid-template-columns: 1fr 1fr 1fr;
   }
   .item-picture {
@@ -123,11 +214,17 @@ button:hover {
   }
 }
 @media only screen and (max-width: 800px){
-  body {
+  :root {
     font-size: 0.90em;
   }
-  .items-box {
+  .items-box ul {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .notifications-wrapper {
+    bottom: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
   }
 }
 
@@ -147,6 +244,7 @@ button:hover {
   gap: 1em;
   width: 75%;
   padding: 0.85em 1em;
+  margin-bottom: 3em;
   list-style: none;
 }
 
@@ -216,7 +314,7 @@ button:hover {
   top: 0;
   right: 0;
   color: black;
-  background-color: white;
+  background: none;
 }
 
 .closing-button:hover {
@@ -256,12 +354,14 @@ button:hover {
 }
 
 footer {
+  margin-top: auto;
   text-align: center;
   font-size: 0.7em;
+  width: 100%;
 }
 
 footer hr {
-  margin-top: 3em;
+
   margin-bottom: 0.3em;
 }
 
@@ -276,7 +376,8 @@ footer hr {
 .notification-item {
   position: relative;
   border-radius: 0.25em;
-  background-color: white;
+  background-color: black;
+  color: white;
   padding: 1em;
   width: 100%;
   height: 12vh;
@@ -284,34 +385,7 @@ footer hr {
   text-align: center;
   opacity: 95%;
   margin-bottom: 0.2em;
-}
-
-.notification-item.success, 
-.notification-item.success .closing-button {
-  background-color: #28a745;
-  color: white;
-}
-
-.notification-item.error, 
-.notification-item.error .closing-button {
-  background-color: #dc3545;
-  color: white;
-}
-
-.notification-timer {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  height: 8px;
-  width: 0;
-}
-
-.success .notification-timer {
-  background-color: #176329;
-}
-
-.error .notification-timer {
-  background-color: #811e28;
+  
 }
 
 .slide-left {

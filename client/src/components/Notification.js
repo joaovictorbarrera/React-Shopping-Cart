@@ -1,48 +1,73 @@
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { useNotifications, useSetNotifications } from '../contexts/NotificationsProvider'
+import { useSetNotifications } from '../contexts/NotificationsProvider'
+import useInterval from '../hooks/useInterval'
 
 function Notification({note}) {
     const noteRef = useRef()
-    const notifications = useNotifications()
     const setNotifications = useSetNotifications()
 
     const [width, setWidth] = useState(0)
-    const [timer, setTimer] = useState()
-    
+    const [delay, setDelay] = useState(null)
+
+    // grow progress bar
+    useInterval(
+        useCallback(
+            () => setWidth(oldWidth => oldWidth + 1), 
+            [setWidth]
+        ), 
+    delay)
+
+    // sliding left animation
     useEffect(() => {
-      noteRef.current.onanimationend = () => {
-        noteRef.current.classList.remove("slide-left")
-        noteRef.current.onanimationend = undefined
-      }
-
-      noteRef.current.classList.add("slide-left")
-    }, [noteRef])
-
-    const removeNotification = useCallback(() => {
+        // console.log("slided left")
         noteRef.current.onanimationend = () => {
-            setNotifications([...notifications.filter(listNote => listNote.id !== note.id)])
+            noteRef.current.classList.remove("slide-left")
+            noteRef.current.onanimationend = undefined
+        }
+
+        noteRef.current.classList.add("slide-left")
+    }, [])
+
+    const handleStartTimer = useCallback(() => {
+        console.log("timer STARTED")
+        setDelay(10)
+    }, [setDelay])
+
+    const handlePauseTimer = useCallback(() => {
+        console.log("timer PAUSED")
+        setDelay(null)
+    }, [setDelay])
+
+    // filter off notification and sliding right animation
+    const handleCloseNotification = useCallback(() => {
+        console.log("slided right / removed notification")
+        handlePauseTimer()
+        noteRef.current.onanimationend = () => {
+            setNotifications(oldNotifications => [...oldNotifications.filter(listNote => listNote.id !== note.id)])
         }
         noteRef.current.classList.add("slide-right")
-    }, [noteRef, note, notifications, setNotifications])
+    }, [note.id, setNotifications, handlePauseTimer])
 
+    // notification is due
     useLayoutEffect(() => {
-        if (width >= noteRef.current.clientWidth) {
-            clearInterval(timer)
-            removeNotification()
+        if (width >= noteRef.current.clientWidth - 10) {
+            handleCloseNotification()
         }
-    }, [noteRef, width, timer, removeNotification])
+    }, [width, handleCloseNotification, handlePauseTimer])
 
+    // start timer when notification is created
     useEffect(() => {
-        setTimer(setInterval(() => {
-            setWidth(oldWidth => oldWidth + 1)
-        }, 10))
-    }, [])
+        handleStartTimer()
+
+        return handlePauseTimer
+    }, [handleStartTimer, handlePauseTimer])
     
     return (
-        <div ref={noteRef} className={`notification-item ${note.type === "SUCCESS" ? "success" : "error"}`}>
-            <button onClick={removeNotification} className='closing-button'>✕</button>
+        <div ref={noteRef} className={`notification-item ${note.type === "SUCCESS" ? "success" : "error"}`}
+        onMouseOver={handlePauseTimer} onMouseLeave={handleStartTimer}>
+            <button onClick={handleCloseNotification} className='closing-button'>✕</button>
             <strong>{note.text}</strong>
-            <div className='notification-timer' style={{"width":width}}></div>
+            <div className='notification-timer' style={{"width":`${width}px`}}></div>
         </div>
     )
 }
