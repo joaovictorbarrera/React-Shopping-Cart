@@ -21,11 +21,14 @@ function AddToCartButton({item}) {
       // add to cart
       const thisItem = cartItems.find(cartItem => cartItem.name === item.name)
       if (thisItem) {
-          thisItem.count += 1
-          setCartItems([...cartItems])
+          setCartItems(oldCartItems => {
+            const thisItem = oldCartItems.find(cartItem => cartItem.name === item.name)
+            thisItem.count += 1
+            return [...oldCartItems]
+          })
       } else {
           item.count = 1
-          setCartItems([item, ...cartItems])
+          setCartItems(oldCartItems => [item, ...oldCartItems])
       }
     }, [cartItems, setCartItems, item, createNotification]
   )

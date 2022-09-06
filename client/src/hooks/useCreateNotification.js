@@ -1,18 +1,17 @@
 import { useCallback } from "react"
-import { useNotifications, useSetNotifications } from "../contexts/NotificationsProvider"
+import { useSetNotifications } from "../contexts/NotificationsProvider"
 
 export default function useCreateNotification() {
-  const notifications = useNotifications()
   const setNotifications = useSetNotifications()
   return (useCallback((text, type) => {
-    setNotifications(
+    setNotifications( oldNotifications => 
     [
       {
           id: JSON.stringify(Date.now()),
           text, type 
       }, 
-      ...notifications
+      ...oldNotifications
     ]
     )
-  }, [notifications, setNotifications]))
+  }, [setNotifications]))
 }
