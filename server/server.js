@@ -1,5 +1,5 @@
 const express = require("express")
-
+const fs = require("fs")
 const app = express()
 
 app.use(require("./logger"))
@@ -7,29 +7,14 @@ app.use(require("./logger"))
 const cors = require("cors")
 app.use(
     cors({
-        origin:"http://localhost:3000"
+        origin:"*"
     })
 )
 app.use(express.static('public'))
 
 app.get('/items', async (req, res) => {
-    const data = await (await fetch('https://fakestoreapi.com/products')).json()
-    data.forEach(element => {
-        element.name = element.title
-        delete element.title
-        element.picture = element.image
-        delete element.image
-    });
+    const data =  JSON.parse((fs.readFileSync("./data.json")).toString())
     res.json({"items": data})
-})
-
-app.get('/productshttp://localhost:4000/products/samsung-monitor-32.jpg/:id', (req, res) => {
-    try {
-        res.sendFile("./public/products/" + req.params.id)
-    }
-    catch(e) {
-        res.sendStatus(404)
-    }
 })
 
 app.listen(4000)

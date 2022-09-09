@@ -3,15 +3,16 @@ import { useSetNotifications } from "../contexts/NotificationsProvider"
 
 export default function useCreateNotification() {
   const setNotifications = useSetNotifications()
-  return (useCallback((text, type) => {
-    setNotifications( oldNotifications => 
-    [
-      {
+  return (useCallback((noteSkeleton) => {
+    setNotifications(oldNotifications => {
+      const newNotification = {
           id: JSON.stringify(Date.now()),
-          text, type 
-      }, 
-      ...oldNotifications
-    ]
-    )
+          ...noteSkeleton
+      }
+
+      return noteSkeleton.clean ? 
+      [newNotification] : 
+      [newNotification, ...oldNotifications]
+    })
   }, [setNotifications]))
 }

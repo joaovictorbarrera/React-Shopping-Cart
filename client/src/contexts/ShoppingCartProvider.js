@@ -14,10 +14,14 @@ export function useSetShoppingCartItems() {
 
 export default function ShoppingCartItemsProvider({children}) {
     const [cartItems, setCartItems] = useLocalStorage("cart-items", JSON.stringify([]))
-
     return (
         <ShoppingCartItemsContext.Provider value={cartItems}>
-            <SetShoppingCartItemsContext.Provider value={(value) => setCartItems(JSON.stringify(value))}>
+            <SetShoppingCartItemsContext.Provider value={(items) => {
+                if (items instanceof Function) {
+                    items = items(JSON.parse(cartItems))
+                }
+                setCartItems(JSON.stringify(items))
+            }}>
                 {children}
             </SetShoppingCartItemsContext.Provider>
         </ShoppingCartItemsContext.Provider>

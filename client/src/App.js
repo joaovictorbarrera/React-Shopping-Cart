@@ -12,20 +12,22 @@ function App() {
   const appStatus = useAppStatus()
 
   return (
-    <NotificationsProvider>
-      <div className='page'>
-        <ShoppingCartItemsProvider>
-          <Top />
-          <ItemsBox/>
-          {appStatus !== "done" ? 
-          <></> :
-          <>
-            <ShoppingCart />
-          </>}
-        </ShoppingCartItemsProvider>
-      </div>
-      {appStatus === "loading" ? <></> : <Footer/>} 
-    </NotificationsProvider>
+    <ShoppingCartItemsProvider>
+      <NotificationsProvider>
+        <div className='page'>
+          
+            <Top />
+            <ItemsBox/>
+            {appStatus !== "done" ? 
+            null :
+            <>
+              <ShoppingCart />
+            </>}
+          
+        </div>
+        {appStatus !== "loading" ? <Footer/> : null} 
+      </NotificationsProvider>
+    </ShoppingCartItemsProvider>
   )
 }
 

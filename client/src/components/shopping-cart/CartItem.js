@@ -25,8 +25,7 @@ function CartItem({item}) {
         const thisItem = oldCartItems.find(cartItem => cartItem.name === item.name)
         thisItem.count = Number(event.target.value)
         return [...oldCartItems]
-      }
-        )
+      })
     }, [item, setCartItems])
 
     return (

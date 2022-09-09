@@ -14,10 +14,13 @@ function AddToCartButton({item}) {
     () => {
       // create notification
       createNotification(
-        `${truncate(item.name, 30)} added to cart successfully.`,
-        "SUCCESS"
+        {
+          "text":`${truncate(item.name, 30)} added to cart successfully.`,
+          "type":"SUCCESS",
+          "duration": 1,
+        }
       )
-      
+                                          
       // add to cart
       const thisItem = cartItems.find(cartItem => cartItem.name === item.name)
       if (thisItem) {
@@ -30,7 +33,7 @@ function AddToCartButton({item}) {
           item.count = 1
           setCartItems(oldCartItems => [item, ...oldCartItems])
       }
-    }, [cartItems, setCartItems, item, createNotification]
+    }, [item, createNotification, cartItems, setCartItems]
   )
 
   return (

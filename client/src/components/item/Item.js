@@ -9,14 +9,14 @@ function Item({item}) {
 
   return (
     <li className='item'>
-      
+
         <div className="item-picture">
           <img alt={item.name} src={item.picture}/>
         </div>
 
         <div className='item-details'>
-            <p>{`${truncate(item.name, MAX_LENGTH)}`}</p>
-            <p><strong>{`$ ${fixTwoDecimalPlaces(item.price)}`}</strong></p>
+            <p className='item-name'>{`${truncate(item.name, MAX_LENGTH)}`}</p>
+            <p className='item-price'><strong>{`$ ${fixTwoDecimalPlaces(item.price)}`}</strong></p>
             <AddToCartButton item={item} />
         </div>
     </li>
