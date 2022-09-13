@@ -1,13 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import '../../App.css'
-import { useAppStatus, useSetAppStatus } from '../../contexts/AppStatusProvider'
-import useCreateNotification from '../../hooks/useCreateNotification'
-import useFetch from '../../hooks/useFetch'
-import useLocalStorage from '../../hooks/useLocalStorage'
+import '../App.css'
+import { useAppStatus, useSetAppStatus } from '../contexts/AppStatusProvider'
+import useCreateNotification from '../hooks/useCreateNotification'
+import useFetch from '../hooks/useFetch'
+import useLocalStorage from '../hooks/useLocalStorage'
 import Item from './Item'
-import Pagination from './Pagination'
 
-function ItemsBox() {
+export default function ItemsBox() {
   const URL = "http://192.168.0.3:4000/items"
   const fetch = useFetch()
   const createNotification = useCreateNotification()
@@ -104,4 +103,37 @@ function ItemsBox() {
   )
 }
 
-export default ItemsBox
+function Pagination({currentPage, setCurrentPage, amountOfPages}) {
+  const scrollTop = useCallback(() => {
+      window.scrollTo({
+          top: document.querySelector(".items-box").getBoundingClientRect().top,
+          behavior: 'smooth'
+      });
+  }, [])
+
+  const handleGoBack = useCallback(() => {
+      if (currentPage === 1) return
+      setCurrentPage(curr => String(Number(curr) - 1))
+      scrollTop()
+  }, [currentPage, setCurrentPage, scrollTop])
+
+  const handleGoForward = useCallback(() => {
+      if (currentPage >= amountOfPages) return
+      setCurrentPage(curr => String(Number(curr) + 1))
+      scrollTop()
+  }, [currentPage, amountOfPages, setCurrentPage, scrollTop])
+
+  return (
+      <div className='pagination-wrapper'>
+          <button className='pagination-button left' onClick={handleGoBack}>
+              {'<'}
+          </button>
+          <div className='pagination-text'>
+              Page {currentPage} of {amountOfPages}
+          </div>
+          <button className='pagination-button right' onClick={handleGoForward}>  
+              {'>'}
+          </button>
+      </div>
+  )
+}

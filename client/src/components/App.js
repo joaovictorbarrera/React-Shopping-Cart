@@ -1,12 +1,12 @@
-import './App.css';
+import '../App.css';
 import React from "react"
-import ItemsBox from './components/item/ItemsBox';
-import ShoppingCart from './components/shopping-cart/ShoppingCart';
-import ShoppingCartItemsProvider from './contexts/ShoppingCartProvider';
-import Footer from './components/Footer';
-import NotificationsProvider from './contexts/NotificationsProvider';
-import Top from './components/Top';
-import { useAppStatus } from './contexts/AppStatusProvider';
+import ItemsBox from './ItemsBox';
+import ShoppingCart from './ShoppingCart';
+import ShoppingCartItemsProvider from '../contexts/ShoppingCartProvider';
+import Footer from './Footer';
+import NotificationsProvider from '../contexts/NotificationsProvider';
+import Header from './Header';
+import { useAppStatus } from '../contexts/AppStatusProvider';
 
 function App() {
   const appStatus = useAppStatus()
@@ -16,7 +16,7 @@ function App() {
       <NotificationsProvider>
         <div className='page'>
           
-            <Top />
+            <Header />
             <ItemsBox/>
             {appStatus !== "done" ? 
             null :

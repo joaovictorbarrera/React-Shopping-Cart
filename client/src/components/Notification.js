@@ -18,8 +18,6 @@ function Notification({note}) {
     const [width, setWidth] = useState(0)
     const [widthIncrementor, setWidthIncrementor] = useState(1)
     const [delay, setDelay] = useState(null)
-    // console.log(widthIncrementor)
-    // console.log(delay)
 
     // grow progress bar
     useInterval(
@@ -31,7 +29,6 @@ function Notification({note}) {
 
     // sliding in animation
     useEffect(() => {
-        console.log(note)
         noteRef.current.onanimationend = () => {
             noteRef.current.classList.remove("slide-in")
             noteRef.current.onanimationend = undefined
@@ -41,16 +38,12 @@ function Notification({note}) {
     }, [note])
 
     const handleStartTimer = useCallback(() => {
-        // console.log(`width: ${(noteRef.current.clientWidth) - 10}`)
         let delayCalc = note.duration ? (note.duration * 1000 / (noteRef.current.clientWidth - 10)) : null
         let widthInc = 1
-        console.log(delayCalc)
         while (delayCalc < 10) {
             widthInc *= 2
             delayCalc *= 2
         }
-        console.log(widthInc)
-        console.log(delayCalc)
         setWidthIncrementor(widthInc)
         setDelay(delayCalc)
     }, [setDelay, note.duration])

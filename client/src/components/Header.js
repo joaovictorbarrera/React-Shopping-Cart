@@ -3,7 +3,7 @@ import "../App.css"
 import { useAppStatus } from '../contexts/AppStatusProvider'
 import { useShoppingCartItems } from '../contexts/ShoppingCartProvider'
 
-function Top() {
+function Header() {
     const cartItems = useShoppingCartItems()
     const [active, setActive] = useState(false)
     const appStatus = useAppStatus()
@@ -25,13 +25,13 @@ function Top() {
     )
 
     return (
-        <div className='top-wrapper'>
-            <div className='top-items'>
+        <div className='header-wrapper'>
+            <div className='header-items'>
                 <h1 className='title'>React Shopping Cart</h1>
                 {appStatus !== "done" ? <></> : 
-                <div onClick={scrollToCart} className={`top-cart-icon-wrapper ${active ? "active" : ""}`}>
+                <div onClick={scrollToCart} className={`header-cart-icon-wrapper ${active ? "active" : ""}`}>
                     <img alt="shopping cart icon" 
-                    src='/shopping-cart-outline.svg' className='top-shopping-cart-icon' />
+                    src='/shopping-cart-outline.svg' className='header-shopping-cart-icon' />
                     {active ? <span className='floating-cart-count'>{cartItems.length}</span> : <></>}
                 </div>}
             </div>
@@ -39,4 +39,4 @@ function Top() {
     )
 }
 
-export default Top
+export default Header
