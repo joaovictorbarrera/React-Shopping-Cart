@@ -1,6 +1,19 @@
+const fs = require("fs")
+const path = require("path")
+
 async function dummyJsonDataFetch() {
     try {
-        const res = await fetch('https://dummyjson.com/products?limit=999999999')
+        const controller = new AbortController()
+        const willThrow = setTimeout(() => {controller.abort()}, 3000)
+
+        const signal = controller.signal
+
+        const res = await fetch('https://dummyjson.com/products?limit=999999999', {
+            method: 'get',
+            signal: signal,
+        })
+
+        clearTimeout(willThrow)
         const data = await res.json()
         return data.products
     } catch (e) {

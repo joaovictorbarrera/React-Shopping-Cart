@@ -15,12 +15,15 @@ app.use(
 app.use(express.static('public'))
 
 app.get('/items', async (req, res) => {
-    // return res.json()
+    const dummyJson = await dummyJsonDataFetch()
+    console.log('dummy json ready')
+    const fakeStore = await fakeStoreDataFetch()
+    console.log('fake store ready')
     return res.json(
         {items:
             [
-                ...(await dummyJsonDataFetch()), 
-                ...(await fakeStoreDataFetch())
+                ...dummyJson, 
+                ...fakeStore
             ]
         }
     )

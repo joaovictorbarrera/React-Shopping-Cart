@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import '../App.css'
 import { useAppStatus, useSetAppStatus } from '../contexts/AppStatusProvider'
 import useCreateNotification from '../hooks/useCreateNotification'
@@ -7,28 +7,59 @@ import useLocalStorage from '../hooks/useLocalStorage'
 import Item from './Item'
 
 export default function ItemsBox() {
+  console.log("rendered")
   const URL = "http://192.168.0.3:4000/items"
-  const fetch = useFetch()
+  const fetchHook = useFetch()
   const createNotification = useCreateNotification()
+  const orders = useMemo(() => {
+    return {
+      "No Order": (items) => items,
+      "Alphabetic": (items) => [...items].sort((a, b) => a.title >= b.title ? 1 : -1),
+      "Alphabetic Reverse": (items) => [...items].sort((a, b) => a.title < b.title ? 1 : -1),
+      "Price Ascending": (items) => [...items].sort((a, b) => a.price >= b.price ? 1 : -1),
+      "Price Descending": (items) => [...items].sort((a, b) => a.price < b.price ? 1 : -1)
+    }
+  }, [])
 
   const appStatus = useAppStatus()
   const setAppStatus = useSetAppStatus()
 
   const [rawItems, setRawItems] = useState([])
   const [paginatedItems, setPaginatedItems] = useState([])
-  const [currentPageItems, setCurrentPageItems]= useState([])
 
   const [itemsPerPage, setItemsPerPage] = useLocalStorage("itemsPerPage", "32")
   const [currentPage, setCurrentPage] = useLocalStorage("currentPage", "1")
 
+  const [selectedCategory, setSelectedCategory] = useLocalStorage("selectedCategory", "All")
+  const [selectedOrder, setSelectedOrder] = useLocalStorage("selectedOrder", "No Order")
+
+  useEffect(() => {
+    fetchHook(URL).then(data => {
+      if (!data?.items) return setAppStatus("failed")
+      setAppStatus("done")
+      setRawItems(data.items)
+    })
+  }, [setAppStatus, fetchHook])
+
+  const filterByCategory = useCallback((items) => {
+    if (selectedCategory === null || selectedCategory === "All") return items
+    return items.filter(item => item.category === selectedCategory)
+  }, [selectedCategory])
+
+  const orderBy = useCallback((items) => {
+    if (selectedOrder === null) return items
+    return orders[selectedOrder](items)
+  }, [selectedOrder, orders])
+
   const createPagination = useCallback(() => {
+    const items = orderBy(filterByCategory(rawItems))
     const pages = []
     let currentItem = 0
-    while (currentItem < rawItems.length) {
+    while (currentItem < items.length) {
       const page = []
       const startingItem = currentItem
-      while (currentItem - startingItem < itemsPerPage && currentItem < rawItems.length) {
-        const item = rawItems[currentItem]
+      while (currentItem - startingItem < itemsPerPage && currentItem < items.length) {
+        const item = items[currentItem]
         page.push(<Item key={item.id} item={item}/> )
         currentItem++
       }
@@ -36,24 +67,13 @@ export default function ItemsBox() {
     }
 
     setPaginatedItems(pages)
-  }, [itemsPerPage, rawItems])
-
-  useEffect(() => {
-    fetch(URL).then(data => {
-      if (!data || !data.items) return setAppStatus("failed")
-      setAppStatus("done")
-      setRawItems(data.items)
-    })
-  }, [setAppStatus, fetch])
+  }, [itemsPerPage, rawItems, filterByCategory, orderBy])
 
   useEffect(createPagination, 
     [createPagination, itemsPerPage])
-
-  useEffect(() => {
-    setCurrentPageItems(paginatedItems[Number(currentPage) - 1])
-  }, [paginatedItems, currentPage])
     
-  const handleSelectChange = useCallback(
+  
+  const handleItemsPerPageChange = useCallback(
     (event) => {
       setItemsPerPage(event.target.value)
       setCurrentPage("1")
@@ -61,44 +81,109 @@ export default function ItemsBox() {
         {
           "text":`Successfully updated to ${event.target.value} items per page.`,
           "type":"WARNING",
-          "duration": 1,
+          "duration": 2,
           "clean":true
         }
       )
     },[setItemsPerPage, createNotification, setCurrentPage]
   )
 
-  if (appStatus === "loading") {
-    return (
-      <div> Loading... </div>
-    )
-  }
+  // FILTER
+  const getListOfCategories = useCallback(() => {
+    return ["All", ...new Set(rawItems.map(item => item.category))]
+  }, [rawItems])
 
-  if (appStatus === "failed") {
-    return (
-      <div> Our servers are down at this time. </div>
+  const handleFilterChange = useCallback((event) => {
+    setSelectedCategory(event.target.value)
+    setCurrentPage("1")
+    createNotification(
+      {
+        "text":`Successfully updated filter option to "${event.target.value}".`,
+        "type":"WARNING",
+        "duration": 2,
+        "clean":true
+      }
     )
-  }
+  }, [setSelectedCategory, createNotification, setCurrentPage])
+
+  // Order by
+  const handleOrderChange = useCallback((event) => {
+    setSelectedOrder(event.target.value)
+    setCurrentPage("1")
+    createNotification(
+      {
+        "text":`Successfully updated order option to "${event.target.value}".`,
+        "type":"WARNING",
+        "duration": 2,
+        "clean":true
+      }
+    )
+  }, [setSelectedOrder, setCurrentPage, createNotification])
+
+  if (appStatus === "loading") return (
+    <div className='loading-container'> 
+      <div class="spinner"></div>
+      <span>Loading... </span> 
+    </div>
+  )
+  if (appStatus === "failed") return <div> Our servers are down at this time. </div>
 
   return (
     <div className='items-box'>
 
       <div className='items-box-top'>
-        <h1>PRODUCTS</h1>
-        <span>Items per page:</span>
-        <select value={itemsPerPage} onChange={handleSelectChange}>
-          <option value="8">8</option>
-          <option value="16">16</option>
-          <option value="32">32</option>
-          <option value="64">64</option>
-        </select>
+        <div>
+          <h1>PRODUCTS</h1>
+          <ItemsPerPage itemsPerPage={itemsPerPage} onChange={handleItemsPerPageChange} />
+        </div>
+        <div>
+          <Filter categories={getListOfCategories()} selectedCategory={selectedCategory} onChange={handleFilterChange}/>
+          <OrderBy orders={Object.keys(orders)} selectedOrder={selectedOrder} onChange={handleOrderChange}/>
+        </div>
       </div>
 
       <ul>
-        {currentPageItems}
+        {paginatedItems[currentPage - 1]}
       </ul>
 
       <Pagination currentPage={Number(currentPage)} setCurrentPage={setCurrentPage} amountOfPages={paginatedItems.length}/>
+    </div>
+  )
+}
+
+function OrderBy({orders, selectedOrder, onChange}) {
+  return (
+  <div className='order-by-container'>
+    <span>Order by:</span>
+    <select value={selectedOrder} onChange={onChange}>
+      {orders.map(order => <option key={order}>{order}</option>)}
+    </select>
+  </div>
+  )
+}
+
+function Filter({categories, selectedCategory, onChange}) {
+  return (
+    <div className='filter-by-container'>
+      <span>Filter by category:</span>
+      <select value={selectedCategory} onChange={onChange}>
+        {categories?.map(category => <option key={category}>{category}</option>)}
+      </select>
+    </div>
+  )
+}
+
+
+function ItemsPerPage({itemsPerPage, onChange}) {
+  return (
+    <div className='items-per-page'>
+      <span>Items per page:</span>
+      <select value={itemsPerPage} onChange={onChange}>
+        <option value="8">8</option>
+        <option value="16">16</option>
+        <option value="32">32</option>
+        <option value="64">64</option>
+      </select>
     </div>
   )
 }
