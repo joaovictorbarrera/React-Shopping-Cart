@@ -14,18 +14,24 @@ app.use(
 )
 app.use(express.static('public'))
 
+function fixIds(data) {
+    data.forEach((item, index) => item.id = index)
+    return data
+}
+
 app.get('/items', async (req, res) => {
     const dummyJson = await dummyJsonDataFetch()
-    console.log('dummy json ready')
     const fakeStore = await fakeStoreDataFetch()
-    console.log('fake store ready')
+
+    let data = [
+        ...fakeStore,
+        ...dummyJson, 
+    ]
+
+    data = fixIds(data)
+
     return res.json(
-        {items:
-            [
-                ...dummyJson, 
-                ...fakeStore
-            ]
-        }
+        {items: data}
     )
 })
 

@@ -1,128 +1,34 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import '../App.css'
-import { useAppStatus, useSetAppStatus } from '../contexts/AppStatusProvider'
-import useCreateNotification from '../hooks/useCreateNotification'
-import useFetch from '../hooks/useFetch'
-import useLocalStorage from '../hooks/useLocalStorage'
-import Item from './Item'
+import { useAppStatus } from '../contexts/AppStatusProvider'
+import useFilterByCategory from '../hooks/useFilterByCategory'
+import useItems from '../hooks/useItems'
+import useOrderMapping from '../hooks/useOrderMapping'
+import usePagination from '../hooks/usePagination'
+import useOrderBy from '../hooks/useOrderBy'
+import useItemsPerPage from '../hooks/useItemsPerPage'
+import useCurrentPage from '../hooks/useCurrentPage'
 
 export default function ItemsBox() {
-  console.log("rendered")
-  const URL = "http://192.168.0.3:4000/items"
-  const fetchHook = useFetch()
-  const createNotification = useCreateNotification()
-  const orders = useMemo(() => {
-    return {
-      "No Order": (items) => items,
-      "Alphabetic": (items) => [...items].sort((a, b) => a.title >= b.title ? 1 : -1),
-      "Alphabetic Reverse": (items) => [...items].sort((a, b) => a.title < b.title ? 1 : -1),
-      "Price Ascending": (items) => [...items].sort((a, b) => a.price >= b.price ? 1 : -1),
-      "Price Descending": (items) => [...items].sort((a, b) => a.price < b.price ? 1 : -1)
-    }
-  }, [])
 
-  const appStatus = useAppStatus()
-  const setAppStatus = useSetAppStatus()
-
-  const [rawItems, setRawItems] = useState([])
-  const [paginatedItems, setPaginatedItems] = useState([])
-
-  const [itemsPerPage, setItemsPerPage] = useLocalStorage("itemsPerPage", "32")
-  const [currentPage, setCurrentPage] = useLocalStorage("currentPage", "1")
-
-  const [selectedCategory, setSelectedCategory] = useLocalStorage("selectedCategory", "All")
-  const [selectedOrder, setSelectedOrder] = useLocalStorage("selectedOrder", "No Order")
-
-  useEffect(() => {
-    fetchHook(URL).then(data => {
-      if (!data?.items) return setAppStatus("failed")
-      setAppStatus("done")
-      setRawItems(data.items)
-    })
-  }, [setAppStatus, fetchHook])
-
-  const filterByCategory = useCallback((items) => {
-    if (selectedCategory === null || selectedCategory === "All") return items
-    return items.filter(item => item.category === selectedCategory)
-  }, [selectedCategory])
-
-  const orderBy = useCallback((items) => {
-    if (selectedOrder === null) return items
-    return orders[selectedOrder](items)
-  }, [selectedOrder, orders])
-
-  const createPagination = useCallback(() => {
-    const items = orderBy(filterByCategory(rawItems))
-    const pages = []
-    let currentItem = 0
-    while (currentItem < items.length) {
-      const page = []
-      const startingItem = currentItem
-      while (currentItem - startingItem < itemsPerPage && currentItem < items.length) {
-        const item = items[currentItem]
-        page.push(<Item key={item.id} item={item}/> )
-        currentItem++
-      }
-      pages.push(page)
-    }
-
-    setPaginatedItems(pages)
-  }, [itemsPerPage, rawItems, filterByCategory, orderBy])
-
-  useEffect(createPagination, 
-    [createPagination, itemsPerPage])
-    
+  const [currentPage, setCurrentPage] = useCurrentPage(1)
+  const [itemsPerPage, handleItemsPerPageChange] = useItemsPerPage("32")
+  const [selectedCategory, handleCategoryChange] = useFilterByCategory("All")
+  const [selectedOrder, handleOrderChange] = useOrderBy("No Order")
   
-  const handleItemsPerPageChange = useCallback(
-    (event) => {
-      setItemsPerPage(event.target.value)
-      setCurrentPage("1")
-      createNotification(
-        {
-          "text":`Successfully updated to ${event.target.value} items per page.`,
-          "type":"WARNING",
-          "duration": 2,
-          "clean":true
-        }
-      )
-    },[setItemsPerPage, createNotification, setCurrentPage]
-  )
+  const appStatus = useAppStatus()
+  const rawItems = useItems()
+  const paginatedItems = usePagination(rawItems, itemsPerPage, selectedOrder, selectedCategory)    
+  
+  useEffect(() => {
+    console.log("called")
+    setCurrentPage(1)
+  }, [selectedCategory, selectedOrder, itemsPerPage, setCurrentPage])
 
-  // FILTER
-  const getListOfCategories = useCallback(() => {
-    return ["All", ...new Set(rawItems.map(item => item.category))]
-  }, [rawItems])
-
-  const handleFilterChange = useCallback((event) => {
-    setSelectedCategory(event.target.value)
-    setCurrentPage("1")
-    createNotification(
-      {
-        "text":`Successfully updated filter option to "${event.target.value}".`,
-        "type":"WARNING",
-        "duration": 2,
-        "clean":true
-      }
-    )
-  }, [setSelectedCategory, createNotification, setCurrentPage])
-
-  // Order by
-  const handleOrderChange = useCallback((event) => {
-    setSelectedOrder(event.target.value)
-    setCurrentPage("1")
-    createNotification(
-      {
-        "text":`Successfully updated order option to "${event.target.value}".`,
-        "type":"WARNING",
-        "duration": 2,
-        "clean":true
-      }
-    )
-  }, [setSelectedOrder, setCurrentPage, createNotification])
 
   if (appStatus === "loading") return (
     <div className='loading-container'> 
-      <div class="spinner"></div>
+      <div className="spinner"></div>
       <span>Loading... </span> 
     </div>
   )
@@ -137,8 +43,8 @@ export default function ItemsBox() {
           <ItemsPerPage itemsPerPage={itemsPerPage} onChange={handleItemsPerPageChange} />
         </div>
         <div>
-          <Filter categories={getListOfCategories()} selectedCategory={selectedCategory} onChange={handleFilterChange}/>
-          <OrderBy orders={Object.keys(orders)} selectedOrder={selectedOrder} onChange={handleOrderChange}/>
+          <Filter rawItems={rawItems} selectedCategory={selectedCategory} onChange={handleCategoryChange}/>
+          <OrderBy selectedOrder={selectedOrder} onChange={handleOrderChange}/>
         </div>
       </div>
 
@@ -146,23 +52,31 @@ export default function ItemsBox() {
         {paginatedItems[currentPage - 1]}
       </ul>
 
-      <Pagination currentPage={Number(currentPage)} setCurrentPage={setCurrentPage} amountOfPages={paginatedItems.length}/>
+      <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} amountOfPages={paginatedItems.length}/>
     </div>
   )
 }
 
-function OrderBy({orders, selectedOrder, onChange}) {
+function OrderBy({selectedOrder, onChange}) {
+  const orders = useOrderMapping()
+  const ordersList = Object.keys(orders)
+
   return (
-  <div className='order-by-container'>
-    <span>Order by:</span>
-    <select value={selectedOrder} onChange={onChange}>
-      {orders.map(order => <option key={order}>{order}</option>)}
-    </select>
-  </div>
+    <div className='order-by-container'>
+      <span>Order by:</span>
+      <select value={selectedOrder} onChange={onChange}>
+        {ordersList.map(order => <option key={order}>{order}</option>)}
+      </select>
+    </div>
   )
 }
 
-function Filter({categories, selectedCategory, onChange}) {
+function Filter({rawItems, selectedCategory, onChange}) {
+  const categories = useMemo(() => 
+    ["All", ...new Set(rawItems.map(item => item.category))], 
+      [rawItems]
+  )
+
   return (
     <div className='filter-by-container'>
       <span>Filter by category:</span>
@@ -172,7 +86,6 @@ function Filter({categories, selectedCategory, onChange}) {
     </div>
   )
 }
-
 
 function ItemsPerPage({itemsPerPage, onChange}) {
   return (
@@ -198,13 +111,13 @@ function Pagination({currentPage, setCurrentPage, amountOfPages}) {
 
   const handleGoBack = useCallback(() => {
       if (currentPage === 1) return
-      setCurrentPage(curr => String(Number(curr) - 1))
+      setCurrentPage(currentPage - 1)
       scrollTop()
   }, [currentPage, setCurrentPage, scrollTop])
 
   const handleGoForward = useCallback(() => {
       if (currentPage >= amountOfPages) return
-      setCurrentPage(curr => String(Number(curr) + 1))
+      setCurrentPage(currentPage + 1)
       scrollTop()
   }, [currentPage, amountOfPages, setCurrentPage, scrollTop])
 
