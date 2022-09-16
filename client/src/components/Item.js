@@ -24,9 +24,7 @@ export default function Item({item}) {
       <Modal item={item} open={modalOpen} onClose={closeModal}/>
 
       <li onClick={openModal} className='item'>
-        <div className='item-picture'>
-          <img alt={item.title} src={item.thumbnail}/>
-        </div>
+        <img className='item-picture' alt={item.title} src={item.thumbnail}/>
         <div className='item-details'>
             <p className='item-name'>{`${truncate(item.title, MAX_LENGTH)}`}</p>
             <p className='item-price'><strong>{`$ ${fixTwoDecimalPlaces(item.price)}`}</strong></p>

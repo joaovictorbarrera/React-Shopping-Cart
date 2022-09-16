@@ -47,9 +47,9 @@ function Modal({item, open, onClose}) {
             <div className='modal'>
                 <div className='modal-wrapper'>
                     <button onClick={handleClose} className='closing-button'>X</button>
-                    <section className='modal-item-picture'>
-                        <img alt={item.title} src={item.thumbnail} />
-                    </section>
+                    
+                    <img className='modal-item-picture' alt={item.title} src={item.thumbnail} />
+                    
                     <section className='modal-item-info'>
                         <header>
                             <h1 className='modal-item-title'>{item.title}</h1>
