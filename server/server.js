@@ -1,4 +1,5 @@
 const express = require("express")
+const path = require("path")
 const app = express()
 
 app.use(require("./logger"))
@@ -18,6 +19,10 @@ function fixIds(data) {
     data.forEach((item, index) => item.id = index)
     return data
 }
+
+app.get('/', (req, res) => {
+    res.sendFile(path.resolve("./public/build/index.html"))
+})
 
 app.get('/items', async (req, res) => {
     const dummyJson = await dummyJsonDataFetch()
