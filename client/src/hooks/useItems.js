@@ -3,7 +3,7 @@ import { useSetAppStatus } from "../contexts/AppStatusProvider"
 import useFetch from "./useFetch"
 
 export default function useItems() {
-    const URL = process.env.REACT_APP_ITEMS_API_URL
+    const URL = process.env.NODE_ENV === 'development' ? process.env.REACT_APP_ITEMS_API_URL: window.ITEMS_API_URL;
     if (!URL) console.log("URL FOR ITEMS API NOT FOUND!")
 
     const fetchHook = useFetch()

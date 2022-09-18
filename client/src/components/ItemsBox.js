@@ -21,7 +21,6 @@ export default function ItemsBox() {
   const paginatedItems = usePagination(rawItems, itemsPerPage, selectedOrder, selectedCategory)    
   
   useEffect(() => {
-    console.log("called")
     setCurrentPage(1)
   }, [selectedCategory, selectedOrder, itemsPerPage, setCurrentPage])
 
