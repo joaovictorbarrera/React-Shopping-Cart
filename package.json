@@ -1,0 +1,19 @@
+{
+  "name": "react-shopping-cart",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "cd client && npm install && npm run build && cd .. && cd server && npm install && npm run start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joaovictorbarrera/React-Shopping-Cart.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joaovictorbarrera/React-Shopping-Cart/issues"
+  },
+  "homepage": "https://github.com/joaovictorbarrera/React-Shopping-Cart#readme"
+}
