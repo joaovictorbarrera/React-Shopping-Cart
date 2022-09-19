@@ -2,7 +2,7 @@ const express = require("express")
 const path = require("path")
 const fs = require("fs")
 const app = express()
-
+const PORT = 4000
 console.log("Server Started")
 
 app.use(require("./logger"))
@@ -66,4 +66,4 @@ app.get('/items', async (req, res) => {
     )
 })
 
-app.listen(4000)
+app.listen(process.env.PORT || PORT)
