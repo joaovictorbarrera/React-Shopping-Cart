@@ -7,8 +7,8 @@ console.log("Server Started")
 
 app.use(require("./logger"))
 
-const dummyJsonDataFetch = require("./products-alternatives/DummyJson")
-const fakeStoreDataFetch = require("./products-alternatives/fakeStore")
+const dummyJsonDataFetch = require("./products-alternatives/dummyJson.js")
+const fakeStoreDataFetch = require("./products-alternatives/fakeStore.js")
 
 app.use(
     require("cors")({
