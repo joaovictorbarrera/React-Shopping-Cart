@@ -9,7 +9,7 @@
     "nodemon": "^2.0.19"
   },
   "scripts": {
-    "start": "env-cmd -f .env.production node server.js",
+    "start": "node server.js",
     "dev": "env-cmd -f .env.development nodemon server.js"
   },
   "name": "server",
