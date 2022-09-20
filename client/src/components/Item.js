@@ -11,7 +11,6 @@ export default function Item({item}) {
   const [modalOpen, setModalOpen] = useState(false)
 
   const openModal = useCallback((event) => {
-    if (event.target.className === "add-to-cart-button") return
     setModalOpen(true)
   }, [setModalOpen])
 
@@ -41,8 +40,9 @@ function AddToCartButton({item}) {
   const setCartItems = useSetShoppingCartItems()
   const createNotification = useCreateNotification()
 
-  const addToCart = useCallback(
-    () => {
+  const handleAddToCart = useCallback(
+    (event) => {
+      event.stopPropagation()
       // create notification
       createNotification(
         {
@@ -68,6 +68,6 @@ function AddToCartButton({item}) {
   )
 
   return (
-    <button onClick={addToCart} className='add-to-cart-button'>Add to cart</button>
+    <button onClick={handleAddToCart} className='add-to-cart-button'>Add to cart</button>
   )
 }
