@@ -24,3 +24,9 @@
 - Changing settings will create a yellow notification to warn the user.
 
 ![Yellow notification](https://i.imgur.com/QOYa4GC.png)
+
+### Responsive
+
+##### Cellphone support
+![Store Cellphone](https://i.imgur.com/NV1Od4K.png)
+![Cart Cellphone](https://i.imgur.com/KGUHnN7.png)
