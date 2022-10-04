@@ -1,5 +1,5 @@
 # React-Shopping-Cart
-#### Test it right now: web-production-3ca0.up.railway.app/
+## Test it right now: web-production-3ca0.up.railway.app/
 
 ### This app is the simulation of a store, which contains a reactive shopping cart. 
 - Easily search items to add, remove, and edit from the cart.
@@ -14,10 +14,13 @@
 
 ### Notification system
 - Adding an item will create a green notification to symbolize the addition.
+
 ![Green Notifications](https://i.imgur.com/34ur3fP.png)
 
 - Removing an item will create a red notification, with a undo button.
+
 ![Red, undo notification](https://i.imgur.com/HalADvq.png)
 
 - Changing settings will create a yellow notification to warn the user.
+
 ![Yellow notification](https://i.imgur.com/QOYa4GC.png)
