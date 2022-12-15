@@ -30,8 +30,8 @@ function injectVariablesIntoHTML(filepath, outputFilePath, vars) {
         const indexHTML = fs.readFileSync(filepath).toString()
         const endOfBody = indexHTML.indexOf("</body>")
         const newContent = (
-            indexHTML.substring(0, endOfBody) + 
-            `<script>${Object.keys(vars).map(variableName => `window.${variableName} = \"${vars[variableName]}\"`)}</script>` + 
+            indexHTML.substring(0, endOfBody) +
+            `<script>${Object.keys(vars).map(variableName => `window.${variableName} = \"${vars[variableName]}\"`)}</script>` +
             indexHTML.substring(endOfBody)
         )
         fs.writeFileSync(outputFilePath, newContent)
@@ -41,8 +41,8 @@ function injectVariablesIntoHTML(filepath, outputFilePath, vars) {
 
 const ITEMS_API_URL = process.env.REACT_APP_ITEMS_API_URL
 injectVariablesIntoHTML(
-    buildFolder + "/index.html", 
-    buildFolder + "/app.html", 
+    buildFolder + "/index.html",
+    buildFolder + "/app.html",
     {ITEMS_API_URL}
 )
 
@@ -56,7 +56,7 @@ app.get('/items', async (req, res) => {
 
     let data = [
         ...fakeStore,
-        ...dummyJson, 
+        ...dummyJson,
     ]
 
     data = fixIds(data)
