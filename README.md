@@ -1,5 +1,5 @@
 # React-Shopping-Cart
-## Test it right now: web-production-3ca0.up.railway.app/
+## Test it right now: https://barrera-react-shopping-cart.up.railway.app/
 
 ### This app is the simulation of a store, which contains a reactive shopping cart. 
 - Easily search items to add, remove, and edit from the cart.
